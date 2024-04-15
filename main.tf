@@ -63,4 +63,23 @@ resource "aws_instance" "amzn-linux" {
 
 }
 
+resource "aws_instance" "ubuntu" {
+  ami                    = "ami-04505e74c0741db8d"
+  instance_type          = "t3.micro"
+  key_name               = aws_key_pair.deployer1.key_name
+  vpc_security_group_ids = ["${aws_security_group.allow_SSH.id}"]
+  tags = {
+    "Name" = "UBUNTU-Node"
+    "ENV"  = "Dev"
+  }
+
+
+  # Type of connection to be established
+  connection {
+    type        = "ssh"
+    user        = "ubuntu"
+    private_key = file("./deployer")
+    host        = self.public_ip
+  }
+
 
